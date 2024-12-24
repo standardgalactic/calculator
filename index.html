@@ -1,51 +1,284 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+    @font-face {
+        src: url('fonts/Sga-Regular.woff2') format('woff2'),
+             url('fonts/Sga-Regular.woff') format('woff'),
+             url('fonts/Sga-Regular.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        font-family: 'Sga Regular';
+    }
 
-    <head>
-        <meta charset="utf-8">
-        <meta name="description" content="Calculator">
-        <meta name="keywords" content="calculator,operations,user interface,output display,decimal point,responsive">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes">
-        <meta name="author" content="Kostas Šliažas">
-        <meta name="msapplication-TileColor" content="#ffffff">
-        <meta name="theme-color" content="#ffffff">
-        <title>Calculator</title>
-        <link rel="stylesheet" href="css/style.min.css">
-        <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-        <link rel="manifest" href="site.webmanifest">
-        <script defer src="js/script.min.js"></script>
-    </head>
+    @font-face {
+        src: url('fonts/Dactyl-Regular.woff2') format('woff2'),
+             url('fonts/Dactyl-Regular.woff') format('woff'),
+             url('fonts/Dactyl.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        font-family: 'Dactyl';
+    }
 
-    <body>
-        <h1 class="title">Calculator</h1>
+    body {
+        font-family: 'Sga Regular', Arial, sans-serif; /* Use SGA font for body */
+        color: #00ff00;
+        background: black;
+        margin: 0;
+        overflow-x: hidden;
+    }
+
+    canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+    }
+
+    .content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        background-color: rgba(0, 0, 0, 0.8);
+        padding: 20px;
+        border: 2px solid #00ff00;
+        box-shadow: 0 0 20px #00ff00;
+        margin: 20px auto;
+        width: 50%;
+        max-width: 400px; /* Adjusted max-width for better layout */
+    }
+
+    h1 {
+        margin: 0;
+        padding: 0;
+        font-size: 2.5em;
+    }
+
+    .calculator {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin: 20px 0;
+    }
+
+    .calculator__screen {
+        grid-column: span 4;
+        background-color: black;
+        border: 2px solid #00ff00;
+        color: #00ff00;
+        font-size: 2em;
+        padding: 10px;
+        text-align: right;
+        font-family: 'Sga Regular', Arial, sans-serif; /* Default to SGA font for screen */
+    }
+
+    .calculator__button {
+        background: rgba(0, 0, 0, 0.5);
+        border: 1px solid #00ff00;
+        color: #00ff00;
+        font-size: 1.5em;
+        padding: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        font-family: 'Sga Regular', Arial, sans-serif; /* Default to SGA font for buttons */
+    }
+
+    .calculator__button:hover {
+        background-color: #00ff00;
+        color: black;
+    }
+
+    .font-toggle-button {
+        margin: 20px 0;
+        background-color: transparent;
+        color: #00ff00;
+        border: 2px solid #00ff00;
+        font-size: 1em;
+        padding: 10px 20px;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .font-toggle-button:hover {
+        background-color: #00ff00;
+        color: black;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 600px) {
+        .content {
+            width: 90%;
+        }
+        .calculator__button {
+            padding: 15px; /* Adjust padding for smaller screens */
+            font-size: 1.2em; /* Adjust font size for smaller screens */
+        }
+    }
+</style>
+</head>
+<body>
+    <canvas id="starfield"></canvas>
+    <div class="content">
+        <h1>Calculator</h1>
+        <button id="font-toggle-button" class="font-toggle-button">Switch to Dactyl</button>
         <main class="calculator">
-            <div class="calculator__input-container">
-                <div class="calculator__wrapper">
-                    <output class="calculator__screen" aria-label="calculator Screen">0</output>
-                    <input type="button" class="calculator__button calculator__button--clear" value="C" aria-label="clear">
-                    <input type="button" class="calculator__button calculator__button--backspace" value="⌫" aria-label="backspace">
-                    <input type="checkbox" class="calculator__button calculator__button--sound" id="esound" title="sound" value="sound" aria-label="sound toggle">
-                    <input type="button" class="calculator__button calculator__button--divide" value="÷" aria-label="divide">
-                    <input type="button" class="calculator__button calculator__button--number" value="7" aria-label="number 7">
-                    <input type="button" class="calculator__button calculator__button--number" value="8" aria-label="number 8">
-                    <input type="button" class="calculator__button calculator__button--number" value="9" aria-label="number 9">
-                    <input type="button" class="calculator__button calculator__button--multiply" value="×" aria-label="multiply">
-                    <input type="button" class="calculator__button calculator__button--number" value="4" aria-label="number 4">
-                    <input type="button" class="calculator__button calculator__button--number" value="5" aria-label="number 5">
-                    <input type="button" class="calculator__button calculator__button--number" value="6" aria-label="number 6">
-                    <input type="button" class="calculator__button calculator__button--subtract" value="-" aria-label="subtract">
-                    <input type="button" class="calculator__button calculator__button--number" value="1" aria-label="number 1">
-                    <input type="button" class="calculator__button calculator__button--number" value="2" aria-label="number 2">
-                    <input type="button" class="calculator__button calculator__button--number" value="3" aria-label="number 3">
-                    <input type="button" class="calculator__button calculator__button--number" value="0" aria-label="number 0">
-                    <input type="button" class="calculator__button calculator__button--decimal" value="," aria-label="decimal">
-                    <input type="button" class="calculator__button calculator__button--equals" value="=" aria-label="equals">
-                    <input type="button" class="calculator__button calculator__button--add" value="+" aria-label="add">
-                </div>
-            </div>
+            <output class="calculator__screen" id="screen" aria-label="calculator Screen">0</output>
+            <input type="button" class="calculator__button calculator__button--clear" value="C" aria-label="clear">
+            <input type="button" class="calculator__button calculator__button--backspace" value="⌫" aria-label="backspace">
+            <input type="button" class="calculator__button calculator__button--divide" value="÷" aria-label="divide">
+            <input type="button" class="calculator__button calculator__button--multiply" value="×" aria-label="multiply">
+            <input type="button" class="calculator__button calculator__button--number" value="7" aria-label="number 7">
+            <input type="button" class="calculator__button calculator__button--number" value="8" aria-label="number 8">
+            <input type="button" class="calculator__button calculator__button--number" value="9" aria-label="number 9">
+            <input type="button" class="calculator__button calculator__button--subtract" value="-" aria-label="subtract">
+            <input type="button" class="calculator__button calculator__button--number" value="4" aria-label="number 4">
+            <input type="button" class="calculator__button calculator__button--number" value="5" aria-label="number 5">
+            <input type="button" class="calculator__button calculator__button--number" value="6" aria-label="number 6">
+            <input type="button" class="calculator__button calculator__button--add" value="+" aria-label="add">
+            <input type="button" class="calculator__button calculator__button--number" value="1" aria-label="number 1">
+            <input type="button" class="calculator__button calculator__button--number" value="2" aria-label="number 2">
+            <input type="button" class="calculator__button calculator__button--number" value="3" aria-label="number 3">
+            <input type="button" class="calculator__button calculator__button--number" value="0" aria-label="number 0">
+            <input type="button" class="calculator__button calculator__button--decimal" value="." aria-label="decimal">
+            <input type="button" class="calculator__button calculator__button--equals" value="=" aria-label="equals">
         </main>
-    </body>
+    </div>
+<script>
+    // Starfield background
+    const starCanvas = document.getElementById('starfield');
+    const starContext = starCanvas.getContext('2d');
+    starCanvas.width = window.innerWidth;
+    starCanvas.height = window.innerHeight;
 
+    let stars = [];
+    const numStars = 1000;
+    const speed = 0.05;
+
+    for (let i = 0; i < numStars; i++) {
+        stars.push({
+            x: Math.random() * starCanvas.width,
+            y: Math.random() * starCanvas.height,
+            z: Math.random() * starCanvas.width
+        });
+    }
+
+    function updateStars() {
+        for (let star of stars) {
+            star.z -= speed;
+            if (star.z <= 0) {
+                star.x = Math.random() * starCanvas.width;
+                star.y = Math.random() * starCanvas.height;
+                star.z = starCanvas.width;
+            }
+        }
+    }
+
+    function drawStars() {
+        starContext.clearRect(0, 0, starCanvas.width, starCanvas.height);
+        for (let star of stars) {
+            const x = (star.x - starCanvas.width / 2) * (starCanvas.width / star.z);
+            const y = (star.y - starCanvas.height / 2) * (starCanvas.width / star.z);
+            const size = (starCanvas.width / star.z) * 0.5;
+            starContext.beginPath();
+            starContext.arc(x + starCanvas.width / 2, y + starCanvas.height / 2, size, 0, Math.PI * 2);
+            starContext.fillStyle = '#ffffff';
+            starContext.fill();
+            starContext.closePath();
+        }
+    }
+
+    function animateStars() {
+        updateStars();
+        drawStars();
+        requestAnimationFrame(animateStars);
+    }
+
+    animateStars();
+
+    // Calculator functionality
+    const screen = document.getElementById('screen');
+    const buttons = document.querySelectorAll('.calculator__button');
+    let currentInput = '0';
+    let operator = '';
+    let firstOperand = null;
+    let shouldResetScreen = false;
+
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            const value = button.value;
+
+            if (button.classList.contains('calculator__button--number')) {
+                if (currentInput === '0' || shouldResetScreen) {
+                    currentInput = value;
+                    shouldResetScreen = false;
+                } else {
+                    currentInput += value;
+                }
+            } else if (button.classList.contains('calculator__button--decimal')) {
+                if (!currentInput.includes('.')) {
+                    currentInput += value;
+                }
+            } else if (button.classList.contains('calculator__button--clear')) {
+                currentInput = '0';
+                operator = '';
+                firstOperand = null;
+            } else if (button.classList.contains('calculator__button--backspace')) {
+                currentInput = currentInput.slice(0, -1) || '0';
+            } else if (button.classList.contains('calculator__button--equals')) {
+                if (operator && firstOperand !== null) {
+                    currentInput = calculate(firstOperand, parseFloat(currentInput), operator).toString();
+                    operator = '';
+                    firstOperand = null;
+                }
+            } else {
+                if (firstOperand === null) {
+                    firstOperand = parseFloat(currentInput);
+                    operator = value;
+                    shouldResetScreen = true;
+                } else if (operator) {
+                    firstOperand = calculate(firstOperand, parseFloat(currentInput), operator);
+                    operator = value;
+                    currentInput = firstOperand.toString();
+                    shouldResetScreen = true;
+                }
+            }
+
+            screen.value = currentInput;
+        });
+    });
+
+    function calculate(a, b, operator) {
+        switch (operator) {
+            case '+': return a + b;
+            case '-': return a - b;
+            case '×': return a * b;
+            case '÷': return a / b;
+            default: return b;
+        }
+    }
+
+    // Font toggle functionality
+    const fontToggleButton = document.getElementById('font-toggle-button');
+    let isUsingDactylFont = false;
+
+    fontToggleButton.addEventListener('click', () => {
+        const buttons = document.querySelectorAll('.calculator__button:not(.calculator__button--backspace)');
+        if (isUsingDactylFont) {
+            buttons.forEach(button => button.style.fontFamily = "'Sga Regular', Arial, sans-serif");
+            screen.style.fontFamily = "'Sga Regular', Arial, sans-serif";
+            fontToggleButton.textContent = "Switch to Dactyl";
+        } else {
+            buttons.forEach(button => button.style.fontFamily = "'Dactyl', Arial, sans-serif");
+            screen.style.fontFamily = "'Dactyl', Arial, sans-serif";
+            fontToggleButton.textContent = "Switch to Decimal";
+        }
+        isUsingDactylFont = !isUsingDactylFont;
+    });
+</script>
+</body>
 </html>
